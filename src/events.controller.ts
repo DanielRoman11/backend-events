@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   Patch,
   Post,
@@ -25,21 +26,31 @@ export class EventsController {
   }
   @Post()
   create(@Body() input: CreateEventDto) {
-    [
-      {
-        ...this.events,
-        when: new Date(input.when),
-        id: this.events.length + 1,
-      },
-    ];
+    const event = {
+      ...input,
+      when: new Date(input.when),
+      id: this.events.length + 1,
+    };
+    return event;
   }
   @Patch(':id')
   update(@Param('id') id, @Body() input: UpdateEventDto) {
-    const event: Event = this.events.find((event) => event.id === Number(id));
-    input;
+    const index = this.events.findIndex((event) => event.id === Number(id));
+
+    this.events[index] = {
+      ...this.events[index],
+      ...input,
+      when: input.when ? new Date(input.when) : this.events[index].when,
+    };
+    const event = {
+      ...input,
+      when: new Date(input.when),
+      id: this.events.length + 1,
+    };
     return event;
   }
   @Delete(':id')
+  @HttpCode(204)
   remove(@Param('id') id) {
     return this.events.filter((event) => event.id !== Number(id));
   }
