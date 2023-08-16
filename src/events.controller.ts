@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from '@nestjs/common';
 import { CreateEventDto } from './createEvents.dto';
 import { UpdateEventDto } from './updateEvent.dto';
 import { Event } from './event.entity';
@@ -21,7 +12,7 @@ export class EventsController {
   }
   @Get(':id')
   findOne(@Param('id') id) {
-    const event: Event = this.events.find((event) => event.id === Number(id));
+    const event: Event = this.events.find(event => event.id === Number(id));
     return event;
   }
   @Post()
@@ -35,7 +26,7 @@ export class EventsController {
   }
   @Patch(':id')
   update(@Param('id') id, @Body() input: UpdateEventDto) {
-    const index = this.events.findIndex((event) => event.id === Number(id));
+    const index = this.events.findIndex(event => event.id === Number(id));
 
     this.events[index] = {
       ...this.events[index],
@@ -52,6 +43,6 @@ export class EventsController {
   @Delete(':id')
   @HttpCode(204)
   remove(@Param('id') id) {
-    return this.events.filter((event) => event.id !== Number(id));
+    return this.events.filter(event => event.id !== Number(id));
   }
 }
