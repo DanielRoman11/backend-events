@@ -10,7 +10,7 @@ export class EventsController {
   constructor(
     @InjectRepository(Event)
     private readonly repository: Repository<Event>
-  ){}
+  ) { }
 
   @Get()
   async findAll() {
@@ -18,13 +18,13 @@ export class EventsController {
   }
 
   @Get('/practice')
-  async practice(){
+  async practice() {
     return await this.repository.find({
-      
-      where: [{ 
+
+      where: [{
         id: MoreThan(3),
         when: MoreThan(new Date('2021-02-12T13:00:00'))
-      },{
+      }, {
         description: Like('%meet%')
       }],
       take: 3,
@@ -44,7 +44,7 @@ export class EventsController {
     return await this.repository.save({
       ...input,
       when: new Date(input.when)
-    }); 
+    });
   }
 
   @Patch(':id')
@@ -57,7 +57,7 @@ export class EventsController {
       when: input.when ? new Date(input.when) : event.when
     });
   }
-  
+
   @Delete(':id')
   @HttpCode(204)
   async remove(@Param('id') id) {
