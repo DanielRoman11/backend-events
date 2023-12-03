@@ -8,8 +8,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 @Controller({ path: '/events' })
 export class EventsController {
   constructor(
-    @InjectRepository(Event)
-    private readonly repository: Repository<Event>
+    @InjectRepository(Event) 
+    private repository: Repository<Event>
   ) { }
 
   @Get()
@@ -20,7 +20,6 @@ export class EventsController {
   @Get('/practice')
   async practice() {
     return await this.repository.find({
-
       where: [{
         id: MoreThan(3),
         when: MoreThan(new Date('2021-02-12T13:00:00'))
@@ -35,21 +34,23 @@ export class EventsController {
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id) {
-    return await this.repository.findOneBy({ id: id });
+  async findOne(@Param('id', ParseIntPipe) id: string) {
+    return await this.repository.findOneBy({ id: Number(id) });
   }
 
   @Post()
   async create(@Body() input: CreateEventDto) {
-    return await this.repository.save({
+    const newEvent = {
       ...input,
       when: new Date(input.when)
-    });
+    }
+
+    return await this.repository.save(newEvent)
   }
 
   @Patch(':id')
   async update(@Param('id', ParseIntPipe) id, @Body() input: UpdateEventDto) {
-    const event = await this.repository.findOne(id);
+    const event = await this.repository.findOneBy(id);
 
     return await this.repository.save({
       ...event,
@@ -60,8 +61,8 @@ export class EventsController {
 
   @Delete(':id')
   @HttpCode(204)
-  async remove(@Param('id') id) {
-    const event = await this.repository.findOne(id);
+  async remove(@Param('id', ParseIntPipe) id) {
+    const event = await this.repository.findOneBy(id);
     return await this.repository.remove(event);
   }
 }
