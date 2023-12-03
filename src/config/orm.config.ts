@@ -11,7 +11,7 @@ export default registerAs(
     password: process.env.DB_PASS,
     database: process.env.DB_NAME,
     entities: [Event],
-    synchronize: process.env.DB_SYNC === 'development'
+    synchronize: process.env.NODE_ENV === 'development'
   })
 )
   
