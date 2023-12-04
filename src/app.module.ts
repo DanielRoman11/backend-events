@@ -13,7 +13,7 @@ import ormConfig from './config/orm.config';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [ormConfig],
-      // expandVariables: true,
+      expandVariables: true,
     }),
     TypeOrmModule.forRootAsync({
       useFactory: ormConfig

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Logger, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Logger, NotFoundException, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 import { CreateEventDto } from './createEvents.dto';
 import { UpdateEventDto } from './updateEvent.dto';
 import { Event } from './event.entity';
@@ -13,13 +13,6 @@ export class EventsController {
     @InjectRepository(Event) 
     private repository: Repository<Event>
   ) { }
-
-  @Get()
-  async findAll() {
-    this.logger.log(`Hit the findAll route`)
-    const events = await this.repository.find();
-    return events;
-  }
 
   @Get('/practice')
   async practice() {
@@ -37,9 +30,29 @@ export class EventsController {
     });
   }
 
+  @Get()
+  async findAll() {
+    try {
+      this.logger.log(`Hit the findAll route`)
+      const events = await this.repository.find();
+      if(!events) throw new NotFoundException();      
+      this.logger.debug(`Found ${events.length} events`)
+      return events;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+  
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: string) {
-    return await this.repository.findOneBy({ id: Number(id) });
+    try {
+      const event = await this.repository.findOneBy({ id: Number(id) });
+      if(!event) throw new NotFoundException();
+
+      return event;
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   @Post()
@@ -48,25 +61,34 @@ export class EventsController {
       ...input,
       when: new Date(input.when)
     }
-
-    return await this.repository.save(newEvent)
+    try {
+      return await this.repository.save(newEvent)
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   @Patch(':id')
   async update(@Param('id', ParseIntPipe) id, @Body() input: UpdateEventDto) {
-    const event = await this.repository.findOneBy(id);
+    try {
+      const event = await this.repository.findOneBy(id);
+      if(!event) throw new NotFoundException();
 
-    return await this.repository.save({
-      ...event,
-      ...input,
-      when: input.when ? new Date(input.when) : event.when
-    });
+      return await this.repository.save({
+        ...event,
+        ...input,
+        when: input.when ? new Date(input.when) : event.when
+      });
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   @Delete(':id')
   @HttpCode(204)
   async remove(@Param('id', ParseIntPipe) id) {
     const event = await this.repository.findOneBy(id);
+    if(!event) throw new NotFoundException();
     return await this.repository.remove(event);
   }
 }
