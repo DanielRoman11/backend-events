@@ -21,6 +21,8 @@ export class Event {
   @Column({default: false})
   completed: boolean;
 
-  @OneToMany(()=> Attendee, (attendee) => attendee.event)
+  @OneToMany(()=> Attendee, (attendee) => attendee.event,{
+    eager: true
+  })
   attendees: Attendee[]
 }

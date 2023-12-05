@@ -30,6 +30,15 @@ export class EventsController {
     });
   }
 
+  @Get('/practice-2')
+  async secondPractice() {
+    return await this.repository.find({
+      loadEagerRelations: true,
+      take: 1
+    })
+  }
+
+
   @Get()
   async findAll() {
     try {
