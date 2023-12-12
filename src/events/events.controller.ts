@@ -4,6 +4,7 @@ import { UpdateEventDto } from './updateEvent.dto';
 import { Event } from './event.entity';
 import { Like, MoreThan, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Attendee } from './attendee.entity';
 
 @Controller({ path: '/events' })
 export class EventsController {
@@ -11,7 +12,9 @@ export class EventsController {
   
   constructor(
     @InjectRepository(Event) 
-    private repository: Repository<Event>
+    private repository: Repository<Event>,
+    @InjectRepository(Attendee)
+    private attendeeRepository: Repository<Attendee>
   ) { }
 
   @Get('/practice')
@@ -32,10 +35,25 @@ export class EventsController {
 
   @Get('/practice-2')
   async secondPractice() {
-    return await this.repository.find({
-      loadEagerRelations: true,
-      take: 1
-    })
+    const event = await this.repository
+      .createQueryBuilder('event')
+      .select(['id', 'name', 'description'])
+      .from(Event, 'event')
+      .orderBy('id','DESC')
+      .limit(2)
+
+    const attendee = await this.attendeeRepository
+      .createQueryBuilder('attendee')
+      .select(['attendee.eventId', 'attendee.name'])
+      .leftJoin(sq =>{
+        sq.subQuery()
+        event.getQuery()
+      }, 'events')
+      .where('attendee.eventId > 1')
+      .setParameters(event.getParameters())
+      .getRawMany()
+    
+    return attendee
   }
 
 
