@@ -14,7 +14,7 @@ export default registerAs(
     database: process.env.DB_NAME,
     autoLoadEntities: true,
     entities: [Event, Attendee],
-    synchronize: process.env.NODE_ENV === 'development'
+    synchronize: process.env.ENVI === 'development'
   })
 )
   

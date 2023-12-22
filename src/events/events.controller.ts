@@ -9,7 +9,6 @@ import { Attendee } from './attendee.entity';
 @Controller({ path: '/events' })
 export class EventsController {
   private readonly logger = new Logger(EventsController.name);
-  
   constructor(
     @InjectRepository(Event) 
     private repository: Repository<Event>,
@@ -33,27 +32,21 @@ export class EventsController {
     });
   }
 
-  @Get('/practice-2')
-  async secondPractice() {
-    const event = await this.repository
-      .createQueryBuilder('event')
-      .select(['id', 'name', 'description'])
-      .from(Event, 'event')
-      .orderBy('id','DESC')
-      .limit(2)
+  @Post('/practice2/:id')
+  async secondPractice(@Param('id', ParseIntPipe) id) {
+    try {
+      const event = await this.repository.findOneBy(id);
+      if(!event) throw new NotFoundException();
 
-    const attendee = await this.attendeeRepository
-      .createQueryBuilder('attendee')
-      .select(['attendee.eventId', 'attendee.name'])
-      .leftJoin(sq =>{
-        sq.subQuery()
-        event.getQuery()
-      }, 'events')
-      .where('attendee.eventId > 1')
-      .setParameters(event.getParameters())
-      .getRawMany()
-    
-    return attendee
+      const attendee = new Attendee;
+      attendee.name = 'Jose';
+      attendee.event = event;
+  
+      await this.attendeeRepository.save(attendee)
+      return attendee
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
 
