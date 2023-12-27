@@ -2,9 +2,9 @@ import { Body, Controller, Delete, Get, HttpCode, Logger, NotFoundException, Par
 import { CreateEventDto } from './createEvents.dto';
 import { UpdateEventDto } from './updateEvent.dto';
 import { Event } from './event.entity';
-import { Like, MoreThan, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Attendee } from './attendee.entity';
+import { Repository } from 'typeorm';
 
 @Controller({ path: '/events' })
 export class EventsController {
@@ -15,40 +15,6 @@ export class EventsController {
     @InjectRepository(Attendee)
     private attendeeRepository: Repository<Attendee>
   ) { }
-
-  @Get('/practice')
-  async practice() {
-    return await this.repository.find({
-      where: [{
-        id: MoreThan(3),
-        when: MoreThan(new Date('2021-02-12T13:00:00'))
-      }, {
-        description: Like('%meet%')
-      }],
-      take: 3,
-      order: {
-        id: 'DESC'
-      }
-    });
-  }
-
-  @Post('/practice2/:id')
-  async secondPractice(@Param('id', ParseIntPipe) id) {
-    try {
-      const event = await this.repository.findOneBy(id);
-      if(!event) throw new NotFoundException();
-
-      const attendee = new Attendee;
-      attendee.name = 'Jose';
-      attendee.event = event;
-  
-      await this.attendeeRepository.save(attendee)
-      return attendee
-    } catch (error) {
-      throw new Error(error);
-    }
-  }
-
 
   @Get()
   async findAll() {

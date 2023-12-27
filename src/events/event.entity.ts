@@ -22,7 +22,7 @@ export class Event {
   completed: boolean;
 
   @OneToMany(()=> Attendee, (attendee) => attendee.event,{
-    eager: false
+    cascade: true
   })
   attendees: Attendee[]
 }
