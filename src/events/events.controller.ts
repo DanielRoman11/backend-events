@@ -5,6 +5,7 @@ import { Event } from './event.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Attendee } from './attendee.entity';
 import { Repository } from 'typeorm';
+import { EventsService } from './event.service';
 
 @Controller({ path: '/events' })
 export class EventsController {
@@ -13,7 +14,8 @@ export class EventsController {
     @InjectRepository(Event) 
     private repository: Repository<Event>,
     @InjectRepository(Attendee)
-    private attendeeRepository: Repository<Attendee>
+    private readonly attendeeRepository: Repository<Attendee>,
+    private readonly eventService: EventsService
   ) { }
 
   @Get()
@@ -32,7 +34,7 @@ export class EventsController {
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: string) {
     try {
-      const event = await this.repository.findOneBy({ id: Number(id) });
+      const event = await this.eventService.getEvent(Number(id));
       if(!event) throw new NotFoundException();
 
       return event;

@@ -25,4 +25,11 @@ export class Event {
     cascade: true
   })
   attendees: Attendee[]
+
+  // * VIRTUAL PROPERTIES
+  
+  attendeeCount?: number;
+  attendeeRejected?: number;
+  attendeeMaybe?: number;
+  attendeeAccepted?: number;
 }
