@@ -16,5 +16,4 @@ export default registerAs(
     entities: [Event, Attendee],
     synchronize: process.env.ENVI === 'development'
   })
-)
-  
+);

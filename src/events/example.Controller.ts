@@ -11,7 +11,7 @@ export class ExampleController{
     private repository: Repository<Event>
   ){ }
 
-  @Get()
+  @Get('/firts')
   async practice() {
     const event = await this.repository.find({
       where: [{
@@ -30,7 +30,7 @@ export class ExampleController{
     return event
   }
 
-  @Get('/:id')
+  @Get('/second/:id')
   async secondPractice(@Param('id', ParseIntPipe) id) {
     try {
       const event = await this.repository.findOne({
@@ -53,4 +53,13 @@ export class ExampleController{
       throw new Error(error);
     }
   }
+
+  @Get('/third')
+  async thirdPratice(){
+    return await this.repository.createQueryBuilder('event')
+    .select(['event.id', 'event.name'])
+    .orderBy('event.id', 'DESC')
+    .getMany()
+  }
+  
 }
