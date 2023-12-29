@@ -42,14 +42,17 @@ export class EventsService {
       'attendee',
       (qb) => qb.where('attendee.answer = :answer', {answer: AttendeeAnswerEnum.Rejected})
     )
+    .loadRelationCountAndMap('e.attendeeAll', 'e.attendees','attendee',
+      (qb)=>qb.andWhere('attendee.id IS NOT NULL')
+    )
   }
   
   public async getEvent(id: number): Promise<Event | undefined> {
     const query = this.getEventWithAttendeeCountQuery()
-      .andWhere('e.id = :id', { id })
+      .andWhere('e.id = :id', { id });
 
     this.logger.debug(query.getSql());
 
-    return query.getOne()
+    return query.getOne();
   }
 }

@@ -22,14 +22,15 @@ export class EventsController {
   async findAll() {
     try {
       this.logger.log(`Hit the findAll route`)
-      const events = await this.repository.find();
-      if(!events) throw new NotFoundException();      
-      this.logger.debug(`Found ${events.length} events`)
-      return events;
+      const events = this.eventService.getEventWithAttendeeCountQuery()
+
+      return await events.getMany()
     } catch (error) {
       throw new Error(error);
     }
   }
+
+
   
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: string) {
