@@ -20,7 +20,7 @@ export class EventsService {
   }  
 
   
-  public getEventWithAttendeeCountQuery(){
+  private getEventWithAttendeeCountQuery(){
     return this.getEventsBaseQuery()
     .loadRelationCountAndMap(
       'e.attendeeCount', 'e.attendees'
@@ -48,7 +48,6 @@ export class EventsService {
         return qb.andWhere('attendee.id IS NOT NULL')
         .andWhere('attendee.id < 5')
       }
-
     )
   }
   
@@ -61,36 +60,42 @@ export class EventsService {
     return query.getOne();
   }
 
-  public async getEventsAttendeeCountFiltered(filter?: ListEvents){
+  public async getEventsAttendeeCountFiltered(filter?: ListEvents): Promise<any>{
     let query = this.getEventWithAttendeeCountQuery()
 
     if(!filter) 
-      return query.getMany();
+      return query
 
     if(filter.when){
       if(filter.when == WhenEventFilter.Today) 
-        query = query.andWhere(`e.when >= CURDATE() AND e.when <= CURDATE() + INTERVAL 1 DAY`);
+        query = query.andWhere(`e.when = CURDATE()`);
       
       if(filter.when == WhenEventFilter.Tomorrow)
-        query = query.andWhere(`e.when >= CURDATE() AND e.when <= CURDATE() + INTERVAL 1 DAY`);
+        query = query.andWhere(`e.when > CURDATE() AND e.when <= CURDATE() + INTERVAL 1 DAY`);
 
       if(filter.when == WhenEventFilter.ThisWeek) 
         query = query.andWhere(`YEARWEEK(e.when, 1) = YEARWEEK(CURDATE(), 1)`)
 
       if(filter.when == WhenEventFilter.NextWeek) 
-        query = query.andWhere(`YEARWEEK(e.when, 1) > YEARWEEK(CURDATE(), 1)`)
+        {
+          query = query.andWhere(`YEARWEEK(e.when, 1) = YEARWEEK(DATE_ADD(CURDATE(), INTERVAL 1 WEEK), 1)`)
+
+          console.log(query.getSql());
+      }
 
       if(filter.when == WhenEventFilter.ThisMonth) 
         query = query.andWhere(`MONTH(e.when) = MONTH(CURDATE()) AND YEAR(e.when) = YEAR(CURDATE())`)
       
       if(filter.when == WhenEventFilter.NextMonth) 
-        query = query.andWhere(`MONTH(e.when) = MONTH(DATE_ADD(CURDATE(), INTERVAL 1 MONTH)) AND YEAR(e.when) = YEAR(CURDATE())`)
+        query = query.andWhere(`MONTH(e.when) = MONTH(DATE_ADD(CURDATE(), INTERVAL 1 MONTH))`)
       
       if(filter.when == WhenEventFilter.ThisYear) 
         query = query.andWhere(`YEAR(e.when) = YEAR(CURDATE())`)
       
       if(filter.when == WhenEventFilter.NextYear) 
         query = query.andWhere(`YEAR(e.when) = YEAR(DATE_ADD(CURDATE(), INTERVAL 1 YEAR))`)
+      
+      return query;
     }
   }
 }

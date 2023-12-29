@@ -23,15 +23,16 @@ export class EventsController {
   async findAll(@Query() filter: ListEvents) {
     try {
       this.logger.log(`Hit the findAll route`)
-      const events = this.eventService.getEventWithAttendeeCountQuery()
+      const events = await this.eventService
+        .getEventsAttendeeCountFiltered(filter)
 
-      return await events.getMany()
+      this.logger.debug(`Found ${await events.getCount()} events`);
+
+      return events.getMany()
     } catch (error) {
       throw new Error(error);
     }
   }
-
-
   
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: string) {
