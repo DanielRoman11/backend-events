@@ -2,6 +2,7 @@ import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { AttendeeAnswerEnum } from "./attendee.entity";
+import { ListEvents, WhenEventFilter } from "./list.event";
 
 @Injectable()
 export class EventsService {
@@ -42,8 +43,12 @@ export class EventsService {
       'attendee',
       (qb) => qb.where('attendee.answer = :answer', {answer: AttendeeAnswerEnum.Rejected})
     )
-    .loadRelationCountAndMap('e.attendeeAll', 'e.attendees','attendee',
-      (qb)=>qb.andWhere('attendee.id IS NOT NULL')
+    .loadRelationCountAndMap('e.attendeeLessThanFive', 'e.attendees','attendee',
+      (qb)=>{ 
+        return qb.andWhere('attendee.id IS NOT NULL')
+        .andWhere('attendee.id < 5')
+      }
+
     )
   }
   
@@ -54,5 +59,38 @@ export class EventsService {
     this.logger.debug(query.getSql());
 
     return query.getOne();
+  }
+
+  public async getEventsAttendeeCountFiltered(filter?: ListEvents){
+    let query = this.getEventWithAttendeeCountQuery()
+
+    if(!filter) 
+      return query.getMany();
+
+    if(filter.when){
+      if(filter.when == WhenEventFilter.Today) 
+        query = query.andWhere(`e.when >= CURDATE() AND e.when <= CURDATE() + INTERVAL 1 DAY`);
+      
+      if(filter.when == WhenEventFilter.Tomorrow)
+        query = query.andWhere(`e.when >= CURDATE() AND e.when <= CURDATE() + INTERVAL 1 DAY`);
+
+      if(filter.when == WhenEventFilter.ThisWeek) 
+        query = query.andWhere(`YEARWEEK(e.when, 1) = YEARWEEK(CURDATE(), 1)`)
+
+      if(filter.when == WhenEventFilter.NextWeek) 
+        query = query.andWhere(`YEARWEEK(e.when, 1) > YEARWEEK(CURDATE(), 1)`)
+
+      if(filter.when == WhenEventFilter.ThisMonth) 
+        query = query.andWhere(`MONTH(e.when) = MONTH(CURDATE()) AND YEAR(e.when) = YEAR(CURDATE())`)
+      
+      if(filter.when == WhenEventFilter.NextMonth) 
+        query = query.andWhere(`MONTH(e.when) = MONTH(DATE_ADD(CURDATE(), INTERVAL 1 MONTH)) AND YEAR(e.when) = YEAR(CURDATE())`)
+      
+      if(filter.when == WhenEventFilter.ThisYear) 
+        query = query.andWhere(`YEAR(e.when) = YEAR(CURDATE())`)
+      
+      if(filter.when == WhenEventFilter.NextYear) 
+        query = query.andWhere(`YEAR(e.when) = YEAR(DATE_ADD(CURDATE(), INTERVAL 1 YEAR))`)
+    }
   }
 }
