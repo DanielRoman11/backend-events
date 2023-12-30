@@ -4,6 +4,7 @@ import { DeleteResult, QueryBuilder, Repository } from "typeorm";
 import { AttendeeAnswerEnum } from "./attendee.entity";
 import { ListEvents, WhenEventFilter } from "./list.event";
 import { Paginate, PaginationResults, PaginationsOptions } from "src/pagination/paginator";
+import { Event } from "./event.entity";
 
 @Injectable()
 export class EventsService {
@@ -112,5 +113,14 @@ export class EventsService {
       .delete()
       .where('id = :id', {id})
       .execute();
+  }
+
+  public async updateEvent(id: number){
+    return await this.eventsRepository
+      .createQueryBuilder()
+      .update(Event)
+      .set({completed: true})
+      .where("id = :id", {id})
+      .execute()
   }
 }
