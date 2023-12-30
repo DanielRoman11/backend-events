@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { QueryBuilder, Repository } from "typeorm";
 import { AttendeeAnswerEnum } from "./attendee.entity";
 import { ListEvents, WhenEventFilter } from "./list.event";
-import { Paginate, PaginationsOptions } from "src/pagination/paginator";
+import { Paginate, PaginationResults, PaginationsOptions } from "src/pagination/paginator";
 
 @Injectable()
 export class EventsService {
@@ -100,7 +100,7 @@ export class EventsService {
     }
   }
 
-  public async getEventWithAttendeeCountPaginated(filter: ListEvents, paginationsOptions: PaginationsOptions){
+  public async getEventWithAttendeeCountPaginated(filter: ListEvents, paginationsOptions: PaginationsOptions): Promise<PaginationResults<Event | undefined>>{
     const query = await this.getEventsAttendeeCountFiltered(filter);
     
     return await Paginate(query.select(), paginationsOptions)
