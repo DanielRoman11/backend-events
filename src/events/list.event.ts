@@ -1,5 +1,3 @@
-import { All } from "@nestjs/common";
-
 export enum WhenEventFilter {
   All = 1,
   Today,
@@ -15,4 +13,3 @@ export enum WhenEventFilter {
 export class ListEvents {
   when?: WhenEventFilter = WhenEventFilter.All;
 }
-

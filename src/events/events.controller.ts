@@ -24,11 +24,9 @@ export class EventsController {
     try {
       this.logger.log(`Hit the findAll route`)
       const events = await this.eventService
-        .getEventsAttendeeCountFiltered(filter)
+        .getEventWithAttendeeCountPaginated(filter, {currentPage: 1, limit: 10, totalPages: true})
 
-      this.logger.debug(`Found ${await events.getCount()} events`);
-
-      return events.getMany()
+      return events
     } catch (error) {
       throw new Error(error);
     }
