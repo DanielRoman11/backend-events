@@ -104,7 +104,7 @@ export class EventsService {
   public async getEventWithAttendeeCountPaginated(filter: ListEvents, paginationsOptions: PaginationsOptions): Promise<PaginationResults<Event | undefined>>{
     const query = await this.getEventsAttendeeCountFiltered(filter);
     
-    return await Paginate(query.select(), paginationsOptions)
+    return await Paginate(query.select(), paginationsOptions);
   }
 
   public async deleteEvent(id: number): Promise<DeleteResult>{
