@@ -4,6 +4,7 @@ import { Strategy } from "passport-local";
 import { User } from "./user.entity";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -24,7 +25,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException();
     }
 
-    if(password !== user.password){
+    if(!await bcrypt.compare(password, user.password)){
       this.logger.debug(`Invalid credentials for user ${username}`);
       throw new UnauthorizedException();
     }
