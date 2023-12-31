@@ -7,6 +7,7 @@ import { EventsModule } from './events/events.module';
 import { AppColombiaService } from './app.Colombia.service';
 import { AppDummy } from './app.dummy';
 import ormConfig from './config/orm.config';
+import { Authmodule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -19,8 +20,9 @@ import ormConfig from './config/orm.config';
       useFactory: ormConfig
     }),
     EventsModule,
+    Authmodule
   ],
-  controllers: [AppController],
+  controllers: [AppController, ],
   providers: [{
     provide: AppService,
     useClass: AppColombiaService
