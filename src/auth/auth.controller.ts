@@ -1,4 +1,4 @@
-import { Controller, Injectable, Logger, Post, Request, UseGuards } from "@nestjs/common";
+import { Controller, Get, Injectable, Logger, Post, Request, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { AuthService } from "./auth.service";
 
@@ -17,5 +17,11 @@ export class AuthController {
       userId: req.user.id,
       token: this.authService.getTokenForUser(req.user),
     }
+  }
+
+  @Get('profile')
+  @UseGuards(AuthGuard('jwt'))
+  async getProfile(@Request() req){
+    return req.user;
   }
 }
