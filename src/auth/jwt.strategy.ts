@@ -4,7 +4,6 @@ import { ExtractJwt, Strategy } from "passport-jwt";
 import { Repository } from "typeorm";
 import { User } from "./user.entity";
 
-
 export class JwtStrategy extends PassportStrategy(Strategy){
   constructor(
     @InjectRepository(User)
@@ -13,7 +12,7 @@ export class JwtStrategy extends PassportStrategy(Strategy){
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: process.env.JWT_SECRET
+      secretOrKey: process.env.JWT_SECRET,
     });
   }
 

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Logger, NotFoundException, Param, ParseIntPipe, Patch, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Logger, NotFoundException, Param, ParseIntPipe, Patch, Post, Query, UnauthorizedException, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CreateEventDto } from './createEvents.dto';
 import { UpdateEventDto } from './updateEvent.dto';
 import { Event } from './event.entity';
@@ -7,6 +7,9 @@ import { Attendee } from './attendee.entity';
 import { Repository } from 'typeorm';
 import { EventsService } from './event.service';
 import { ListEvents } from './list.event';
+import { CurrentUser } from 'src/auth/current-user.decorator';
+import { User } from 'src/auth/user.entity';
+import { AuthGuardJwt } from 'src/auth/auth-guard.jwt';
 
 @Controller({ path: '/events' })
 export class EventsController {
@@ -14,8 +17,6 @@ export class EventsController {
   constructor(
     @InjectRepository(Event) 
     private repository: Repository<Event>,
-    @InjectRepository(Attendee)
-    private readonly attendeeRepository: Repository<Attendee>,
     private readonly eventService: EventsService
   ) { }
 
@@ -25,8 +26,11 @@ export class EventsController {
     try {
       this.logger.log(`Hit the findAll route`)
       const events = await this.eventService
-        .getEventWithAttendeeCountPaginated(filter, {currentPage: 1, limit: 10, totalPages: true})
-
+        .getEventWithAttendeeCountPaginated(filter, {
+          currentPage: 1, limit: 10,
+          totalPages: true
+        })
+      
       return events
     } catch (error) {
       throw new Error(error);
@@ -46,23 +50,22 @@ export class EventsController {
   }
 
   @Post()
-  async create(@Body() input: CreateEventDto) {
-    const newEvent = {
-      ...input,
-      when: new Date(input.when)
-    }
+  @UseGuards(AuthGuardJwt)
+  async create(@Body() input: CreateEventDto, @CurrentUser() user: User) {
     try {
-      return await this.repository.save(newEvent)
+      return await this.eventService.createEvent(input, user);
     } catch (error) {
       throw new Error(error);
     }
   }
 
   @Patch(':id')
-  async update(@Param('id', ParseIntPipe) id, @Body() input: UpdateEventDto) {
+  async update(@Param('id', ParseIntPipe) id, @Body() input: UpdateEventDto, @CurrentUser() user: User) {
     try {
       const event = await this.repository.findOneBy(id);
       if(!event) throw new NotFoundException();
+
+      if(event.organizerId !== user.id) throw new UnauthorizedException();
 
       return await this.repository.save({
         ...event,

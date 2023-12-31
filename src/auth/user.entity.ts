@@ -24,8 +24,8 @@ export class User{
 
   @OneToOne(() => Profile)
   @JoinColumn()
-  profile: Profile
+  profile: Profile;
 
   @OneToMany(() => Event, (event) => event.organizer)
-  events: Event[]
+  organized: Event[];
 }

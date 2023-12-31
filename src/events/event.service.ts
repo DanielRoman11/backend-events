@@ -1,10 +1,12 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DeleteResult, QueryBuilder, Repository } from "typeorm";
-import { AttendeeAnswerEnum } from "./attendee.entity";
+import { Attendee, AttendeeAnswerEnum } from "./attendee.entity";
 import { ListEvents, WhenEventFilter } from "./list.event";
 import { Paginate, PaginationResults, PaginationsOptions } from "src/pagination/paginator";
 import { Event } from "./event.entity";
+import { CreateEventDto } from "./createEvents.dto";
+import { User } from "src/auth/user.entity";
 
 @Injectable()
 export class EventsService {
@@ -15,12 +17,42 @@ export class EventsService {
     private readonly eventsRepository: Repository<Event>
   ){ };
 
+  public getEventsQuery(id: number){
+    return this.eventsRepository.createQueryBuilder('e')
+      .where('id = :id', {id})
+      .getOne()
+  }
+
   private getEventsBaseQuery(){
     return this.eventsRepository
       .createQueryBuilder('e')
       .orderBy('e.id', 'DESC')
-  }  
+  }
 
+  public async deleteEvent(id: number): Promise<DeleteResult>{
+    return await this.eventsRepository
+      .createQueryBuilder('e')
+      .delete()
+      .where('id = :id', {id})
+      .execute();
+  }
+
+  public async updateEvent(id: number){
+    return await this.eventsRepository
+      .createQueryBuilder()
+      .update(Event)
+      .set({completed: true})
+      .where("id = :id", {id})
+      .execute()
+  }
+
+  public async createEvent(input: CreateEventDto, user: User): Promise<Event>{
+    return await this.eventsRepository.save({
+      ...input,
+      organizer: user,
+      when: new Date(input.when)
+    })
+  }
   
   private getEventWithAttendeeCountQuery(){
     return this.getEventsBaseQuery()
@@ -105,22 +137,5 @@ export class EventsService {
     const query = await this.getEventsAttendeeCountFiltered(filter);
     
     return await Paginate(query.select(), paginationsOptions);
-  }
-
-  public async deleteEvent(id: number): Promise<DeleteResult>{
-    return await this.eventsRepository
-      .createQueryBuilder('e')
-      .delete()
-      .where('id = :id', {id})
-      .execute();
-  }
-
-  public async updateEvent(id: number){
-    return await this.eventsRepository
-      .createQueryBuilder()
-      .update(Event)
-      .set({completed: true})
-      .where("id = :id", {id})
-      .execute()
-  }
+  }  
 }
