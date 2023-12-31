@@ -7,6 +7,7 @@ import { Paginate, PaginationResults, PaginationsOptions } from "src/pagination/
 import { Event } from "./event.entity";
 import { CreateEventDto } from "./createEvents.dto";
 import { User } from "src/auth/user.entity";
+import { UpdateEventDto } from "./updateEvent.dto";
 
 @Injectable()
 export class EventsService {
@@ -37,13 +38,12 @@ export class EventsService {
       .execute();
   }
 
-  public async updateEvent(id: number){
-    return await this.eventsRepository
-      .createQueryBuilder()
-      .update(Event)
-      .set({completed: true})
-      .where("id = :id", {id})
-      .execute()
+  public async updateEvent(input: UpdateEventDto, event: Event): Promise<Event> {
+    return await this.eventsRepository.save({
+      ...event,
+      ...input,
+      when: input.when ? new Date(input.when) : event.when
+    })
   }
 
   public async createEvent(input: CreateEventDto, user: User): Promise<Event>{
