@@ -1,5 +1,6 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Attendee } from "./attendee.entity";
+import { User } from "src/auth/user.entity";
 
 @Entity()
 export class Event {
@@ -26,8 +27,11 @@ export class Event {
   })
   attendees: Attendee[]
 
-  // * VIRTUAL PROPERTIES
-  
+  @ManyToOne(() => User, (user) => user.events)
+  @JoinColumn({name: 'organizerId'})
+  organizer: User;
+
+  //* VIRTUAL PROPERTIES
   attendeeCount?: number;
   attendeeRejected?: number;
   attendeeMaybe?: number;
