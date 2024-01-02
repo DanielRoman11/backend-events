@@ -6,7 +6,7 @@ import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 
 @Controller('users')
-export class userController {
+export class UserController {
   constructor(
     private readonly authService: AuthService,
     @InjectRepository(User)

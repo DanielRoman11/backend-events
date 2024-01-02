@@ -1,5 +1,4 @@
 import { Controller, Get, Injectable, Logger, Post, Request, UseGuards } from "@nestjs/common";
-import { AuthGuard } from "@nestjs/passport";
 import { AuthService } from "./auth.service";
 import { CurrentUser } from "./current-user.decorator";
 import { User } from "./user.entity";

@@ -7,7 +7,6 @@ import * as bcrypt from "bcrypt";
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(User)
     private readonly jwtService: JwtService,
   ) { }
 
