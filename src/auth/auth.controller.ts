@@ -1,4 +1,4 @@
-import { Controller, Get, Injectable, Logger, Post, Request, UseGuards } from "@nestjs/common";
+import { Controller, Get, Post,  SerializeOptions, UseGuards } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { CurrentUser } from "./current-user.decorator";
 import { User } from "./user.entity";
@@ -7,9 +7,8 @@ import { AuthGuardJwt } from "./auth-guard.jwt";
 
 
 @Controller('auth')
+@SerializeOptions({strategy: 'excludeAll'})
 export class AuthController {
-  private readonly logger: Logger = new Logger(AuthController.name);
-
   constructor(
     private readonly authService: AuthService,
   ) { }
