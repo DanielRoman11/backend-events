@@ -37,11 +37,9 @@ export class Event {
   
   @ManyToOne(() => User, (user) => user.organized)
   @JoinColumn({name: 'organizerId'})
-  @Expose()
   organizer: User;
   
   @Column({nullable: true})
-  @Expose()
   organizerId: number;
   
   //* VIRTUAL PROPERTIES
