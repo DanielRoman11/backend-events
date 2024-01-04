@@ -17,6 +17,7 @@ export class EventsController {
 
   @Get()
   @UsePipes(new ValidationPipe({transform: true}))
+  @UseInterceptors(ClassSerializerInterceptor)
   async findAll(@Query() filter: ListEvents) {
     this.logger.log(`Hit the findAll route`)
     const events = await this.eventService
