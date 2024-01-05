@@ -24,7 +24,7 @@ export class EventsController {
       .getEventWithAttendeeCountPaginated(filter, {
         currentPage: 1, limit: 10,
         totalPages: true
-      })
+      });
     
     return events
   }
