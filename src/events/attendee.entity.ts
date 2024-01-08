@@ -15,10 +15,6 @@ export class Attendee {
   @Expose()
   id: number
   
-  @Column()
-  @Expose()
-  name: string
-  
   @ManyToOne(()=> Event, (event) => event.attendees, {
     nullable: false,
   })
@@ -39,6 +35,7 @@ export class Attendee {
 
   @ManyToOne(()=> User, (user) => user.attended)
   @JoinColumn({name: 'userId'})
+  @Expose()
   user: User;
   
   @Column()
