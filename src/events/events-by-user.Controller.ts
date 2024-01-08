@@ -13,7 +13,7 @@ export class EventsOrganizedByUserController{
    */
   @Get()
   @UseInterceptors(ClassSerializerInterceptor)
-  public async findAll(@Param('userId', ParseIntPipe) userId: number, @Query('page') page = 1) {
+  public async findAll(@Param('userId', ParseIntPipe) userId: number, @Query('page', ParseIntPipe) page = 1) {
     return await this.eventsService.getEventsOrganizedByUserIdPaginated(userId, {currentPage: page, limit: 10})
   }
 }

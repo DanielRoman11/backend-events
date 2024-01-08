@@ -18,10 +18,10 @@ export class CurrentEventAttendaceController {
   @Get()
   @UseGuards(AuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)
-  async findAll(@CurrentUser() user: User, @Query('page') page = 1) {
+  async findAll(@CurrentUser() user: User, @Query('page', ParseIntPipe) page = 1) {
     return await this.eventsService.getEventsAttendedByUserIdPaginated(user.id, {
       currentPage: page,
-      limit: 6
+      limit: 10
     })
   }
   
@@ -39,7 +39,7 @@ export class CurrentEventAttendaceController {
   @Put('/:eventId')
   @UseGuards(AuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)
-  async createOrUpdate(@Param('eventId') eventId: number, @Body() input: CreateAttendeeDto, @CurrentUser() user: User) {
+  async createOrUpdate(@Param('eventId', ParseIntPipe) eventId: number, @Body() input: CreateAttendeeDto, @CurrentUser() user: User) {
     return this.attendeService.createOrUpdate(input, eventId, user.id)
   }
 }
