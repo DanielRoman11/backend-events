@@ -12,7 +12,7 @@ export class AttendeesService {
   ) { }
 
   /**
-   * getAttendee
+   * get Attendee by eventId
    */
   public async findByEventId(eventId: number): Promise<Attendee> {
     const query = this.attendeeRepository
@@ -24,8 +24,8 @@ export class AttendeesService {
 
   public async findOneByEventIdAndUserId(userId: number, eventId: number): Promise<Attendee | undefined>{
     const query = await this.attendeeRepository.findOneBy({
-      event: {id: eventId},
-      user: {id: userId}
+      event: { id: eventId },
+      user: { id: userId }
     });
     
     return query

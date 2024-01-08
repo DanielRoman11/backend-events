@@ -3,7 +3,7 @@ import { AttendeesService } from "./attendee.service";
 import { Attendee } from "./attendee.entity";
 
 @Controller('events/:eventId/Attendees')
-@SerializeOptions({strategy: 'excludeAll'})
+@SerializeOptions({ strategy: 'excludeAll' })
 export class EventAttendeeController{
   constructor(
     private readonly attendeesService: AttendeesService
