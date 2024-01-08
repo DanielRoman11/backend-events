@@ -50,7 +50,7 @@ export class EventsController {
   @UseInterceptors(ClassSerializerInterceptor)
   @HttpCode(202)
   async update(@Param('id', ParseIntPipe) id, @Body() input: UpdateEventDto, @CurrentUser() user: User) {
-    const event = await this.eventService.getEventWithAttendeeCount(id);
+    const event = await this.eventService.findOne(id);
     
     if(!event) throw new NotFoundException();
 
