@@ -1,8 +1,8 @@
 import { Body, ClassSerializerInterceptor, Controller, Delete, ForbiddenException, Get, HttpCode, Logger, NotFoundException, Param, ParseIntPipe, Patch, Post, Query, SerializeOptions, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
-import { CreateEventDto } from './createEvents.dto';
-import { UpdateEventDto } from './updateEvent.dto';
+import { CreateEventDto } from './input/createEvents.dto';
+import { UpdateEventDto } from './input/updateEvent.dto';
 import { EventsService } from './event.service';
-import { ListEvents } from './list.event';
+import { ListEvents } from './input/list.event';
 import { CurrentUser } from 'src/auth/current-user.decorator';
 import { User } from 'src/auth/user.entity';
 import { AuthGuardJwt } from 'src/auth/auth-guard.jwt';
@@ -32,7 +32,7 @@ export class EventsController {
   @Get(':id')
   @UseInterceptors(ClassSerializerInterceptor)
   async findOne(@Param('id', ParseIntPipe) id) {
-    const event = await this.eventService.getEvent(id);
+    const event = await this.eventService.getEventWithAttendeeCount(id);
     if(!event) throw new NotFoundException();
 
     return event;
@@ -50,7 +50,7 @@ export class EventsController {
   @UseInterceptors(ClassSerializerInterceptor)
   @HttpCode(202)
   async update(@Param('id', ParseIntPipe) id, @Body() input: UpdateEventDto, @CurrentUser() user: User) {
-    const event = await this.eventService.getEvent(id);
+    const event = await this.eventService.getEventWithAttendeeCount(id);
     
     if(!event) throw new NotFoundException();
 
@@ -63,7 +63,7 @@ export class EventsController {
   @UseGuards(AuthGuardJwt)
   @HttpCode(204)
   async remove(@Param('id', ParseIntPipe) id, @CurrentUser() user: User) {
-    const event = await this.eventService.getEvent(id);
+    const event = await this.eventService.findOne(id);
     if(!event) throw new NotFoundException();
 
     if(event.organizerId !== user.id) throw new ForbiddenException(null, 'You are not authorized to modified this event.');
