@@ -39,19 +39,19 @@ export class EventsService {
   }
 
   public async updateEvent(input: UpdateEventDto, event: Event): Promise<Event> {
-    return await this.eventsRepository.save({
+    return await this.eventsRepository.save(new Event({
       ...event,
       ...input,
       when: input.when ? new Date(input.when) : event.when
-    })
+    }))
   }
 
   public async createEvent(input: CreateEventDto, user: User): Promise<Event>{
-    return await this.eventsRepository.save({
+    return await this.eventsRepository.save(new Event({
       ...input,
       organizer: user,
       when: new Date(input.when)
-    })
+    }))
   }
   
   private getEventWithAttendeeCountQuery(): SelectQueryBuilder<Event>{
@@ -165,7 +165,7 @@ export class EventsService {
 
   private getEventsOrganizedByUserIdQuery(userId: number): SelectQueryBuilder<Event>{
     const query = this.getEventsBaseQuery()
-      .where('userId = :userId', {userId})
+      .where('e.organizerId = :userId', {userId})
 
     return query
   }
