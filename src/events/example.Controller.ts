@@ -42,7 +42,7 @@ export class ExampleController{
         throw new NotFoundException();
       
       const attendee = new Attendee();
-      attendee.name = 'Juan Cascade';
+      // attendee.name = 'Juan Cascade';
       // attendee.event = event;
       
       event.attendees.push(attendee);
