@@ -14,12 +14,12 @@ export class AttendeesService {
   /**
    * get Attendee by eventId
    */
-  public async findByEventId(eventId: number): Promise<Attendee> {
+  public async findByEventId(eventId: number): Promise<Attendee[]> {
     const query = this.attendeeRepository
       .createQueryBuilder('a')
-      .where('a.id = :id', {eventId})
+      .where('a.eventId = :eventId', { eventId })
 
-    return query.getOne()
+    return query.getMany()
   }
 
   public async findOneByEventIdAndUserId(userId: number, eventId: number): Promise<Attendee | undefined>{
