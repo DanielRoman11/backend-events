@@ -3,7 +3,6 @@ import { AttendeesService } from "./attendee.service";
 import { CreateAttendeeDto } from "./input/createAttendee.dto";
 import { CurrentUser } from "src/auth/current-user.decorator";
 import { User } from "src/auth/user.entity";
-import { AuthGuard } from "@nestjs/passport";
 import { EventsService } from "./event.service";
 import { AuthGuardJwt } from "src/auth/auth-guard.jwt";
 
@@ -19,7 +18,7 @@ export class CurrentEventAttendaceController {
   @Get()
   @UseGuards(AuthGuardJwt)
   @UseInterceptors(ClassSerializerInterceptor)
-  async findAll(@CurrentUser() user: User, @Query('page', ParseIntPipe, new DefaultValuePipe(1)) page = 1) {
+  async findAll(@CurrentUser() user: User, @Query('page', new DefaultValuePipe(1), new ParseIntPipe()) page = 1) {
     return await this.eventsService.getEventsAttendedByUserIdPaginated(user.id, {
       currentPage: page,
       limit: 10
