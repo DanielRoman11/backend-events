@@ -39,6 +39,6 @@ export class Attendee {
   user: User;
   
   @Column()
-  @Expose()
+  // @Expose()
   userId: number;
 }
