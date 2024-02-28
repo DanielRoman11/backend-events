@@ -5,10 +5,10 @@ export class CreateUserDto {
   @Length(5)
   username:string;
   
-  @Length(8)
+  @Length(5)
   password:string;
   
-  @Length(8)
+  @Length(5)
   retypePassword:string;
   
   @IsEmail()
