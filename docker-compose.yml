@@ -1,19 +1,43 @@
 version: "3.8"
 
+networks:
+  backend-events_default:
+    driver: bridge
+
 services:
-  mysql:
+  eventos:
     image: mysql:8.2.0
-    container_name: "mysql"
+    container_name: "eventos"
     command: --default-authentication-plugin=caching_sha2_password
     restart: always
     ports:
-      - '3306:3306'
+      - '3307:3306'
     environment:
-      MYSQL_ROOT_PASSWORD: secret
-      
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: daker
+      MYSQL_PASSWORD: secret
+      MYSQL_DATABASE: eventos
+      MYSQL_AUTHENTICATION_PLUGIN: mysql_native_password
+    networks:
+      - backend-events_default
+
   adminer:
     image: adminer
     restart: always
     ports:
       - 8080:8080
-  
+
+  app:
+    image: nestjs-docker:local
+    container_name: nestjs-docker
+    build: 
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - 3001:3001
+    volumes:
+      - .:/app
+    depends_on:
+      - eventos
+    networks:
+      - backend-events_default
