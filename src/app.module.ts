@@ -1,31 +1,29 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from "@nestjs/config";
 import { EventsModule } from './events/events.module';
 import { AppColombiaService } from './app.Colombia.service';
 import { AppDummy } from './app.dummy';
-import ormConfig from './config/orm.config';
 import { Authmodule } from './auth/auth.module';
+import { DatabaseModule } from './config/database.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [ormConfig],
       expandVariables: true,
-    }),
-    TypeOrmModule.forRootAsync({
-      useFactory: ormConfig
+      envFilePath: '.env'
     }),
     EventsModule,
-    Authmodule
+    Authmodule,
+    DatabaseModule
   ],
   controllers: [AppController, ],
   providers: [{
     provide: AppService,
-    useClass: AppColombiaService
+    useClass: AppColombiaService,
+    
   },{
     provide: 'APP_NAME',
     useValue: 'Nest Events Backend'
