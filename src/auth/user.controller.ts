@@ -1,4 +1,4 @@
-import { BadRequestException, Body, ConflictException, Controller, Injectable, Post } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Post } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { CreateUserDto } from "./input/create.user.dto";
 import { User } from "./user.entity";
