@@ -1,10 +1,10 @@
 import { Body, ClassSerializerInterceptor, Controller, DefaultValuePipe, Get, NotFoundException, Param, ParseIntPipe, Put, Query, SerializeOptions, UseGuards, UseInterceptors } from "@nestjs/common";
 import { AttendeesService } from "./attendee.service";
 import { CreateAttendeeDto } from "./input/createAttendee.dto";
-import { CurrentUser } from "src/auth/current-user.decorator";
-import { User } from "src/auth/user.entity";
+import { CurrentUser } from "./../auth/current-user.decorator";
+import { User } from "./../auth/user.entity";
 import { EventsService } from "./event.service";
-import { AuthGuardJwt } from "src/auth/auth-guard.jwt";
+import { AuthGuardJwt } from "./../auth/auth-guard.jwt";
 
 @Controller('events-attendance')
 @SerializeOptions({strategy: 'excludeAll'})
