@@ -17,6 +17,7 @@ export class Attendee {
   
   @ManyToOne(()=> Event, (event) => event.attendees, {
     nullable: false,
+    onDelete: 'CASCADE',
   })
   @JoinColumn({name: 'eventId'})
   @Expose()
@@ -33,7 +34,7 @@ export class Attendee {
   @Expose()
   answer: AttendeeAnswerEnum;
 
-  @ManyToOne(()=> User, (user) => user.attended)
+  @ManyToOne(()=> User, (user) => user.attended, {})
   @JoinColumn({name: 'userId'})
   @Expose()
   user: User;
