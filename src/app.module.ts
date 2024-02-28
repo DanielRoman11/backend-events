@@ -8,12 +8,15 @@ import { AppDummy } from './app.dummy';
 import { Authmodule } from './auth/auth.module';
 import { DatabaseModule } from './config/database.module';
 
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       expandVariables: true,
-      envFilePath: '.env'
+      envFilePath: '.env',
     }),
     EventsModule,
     Authmodule,
@@ -23,7 +26,6 @@ import { DatabaseModule } from './config/database.module';
   providers: [{
     provide: AppService,
     useClass: AppColombiaService,
-    
   },{
     provide: 'APP_NAME',
     useValue: 'Nest Events Backend'
