@@ -22,7 +22,7 @@ export class Event {
   @Expose()
   description: string;
   
-  @Column({type: "date"})
+  @Column()
   @Expose()
   when: Date;
   
@@ -41,7 +41,7 @@ export class Event {
   attendees: Attendee[]
   
   @ManyToOne(() => User, (user) => user.organized)
-  @JoinColumn({name: 'organizerId'})
+  @JoinColumn()
   organizer: User;
   
   @Column({nullable: true})
