@@ -17,15 +17,14 @@ import * as path from 'path';
     console.error(error);
   }
 })();
-
-console.log(process.env.DB_NAME);
+// console.log(process.env.DB_NAME);
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,
-      port: Number(process.env.DB_PORT) || 3307,
+      port: Number(process.env.DB_PORT) && 3307,
       username: process.env.DB_USER,
       password: process.env.DB_PASS,
       database: process.env.DB_NAME,
