@@ -151,22 +151,22 @@ export class EventsService {
     );
   }
 
-  private getEventsAttendedByUserIdQuery(userId: number): SelectQueryBuilder<Event>{
-    return this.getEventsBaseQuery()
-      .leftJoinAndSelect('e.attendees','a')
-      .where('a.userId = :userId', { userId })
-  }
-
-  public async getEventsAttendedByUserIdPaginated(userId: number, paginateOptions: PaginationsOptions): Promise<PaginatedEvents>{
-    return await Paginate<Event>(
-      this.getEventsOrganizedByUserIdQuery(userId), paginateOptions
-    );
-  }
-
   private getEventsOrganizedByUserIdQuery(userId: number): SelectQueryBuilder<Event>{
     const query = this.getEventsBaseQuery()
       .where('e.organizerId = :userId', {userId})
 
     return query
+  }
+
+  public async getEventsAttendedByUserIdPaginated(userId: number, paginateOptions: PaginationsOptions): Promise<PaginatedEvents>{
+    return await Paginate<Event>(
+      this.getEventsAttendedByUserIdQuery(userId), paginateOptions
+    );
+  }
+
+  private getEventsAttendedByUserIdQuery(userId: number): SelectQueryBuilder<Event>{
+    return this.getEventsBaseQuery()
+      .leftJoinAndSelect('e.attendees','a')
+      .where('a.userId = :userId', { userId })
   }
 }
