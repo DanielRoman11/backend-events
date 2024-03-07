@@ -30,6 +30,7 @@ import * as path from 'path';
       database: process.env.DB_NAME,
       entities: [Event, Attendee, Profile, User],
       synchronize: process.env.NODE_ENV !== 'production',
+      dropSchema: Boolean(process.env.NODE_ENV === 'e2e' && false)
     }),
   ],
 })
