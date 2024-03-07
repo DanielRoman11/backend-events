@@ -5,8 +5,18 @@ import { User } from './../auth/user.entity';
 import { Attendee } from './../events/attendee.entity';
 import { Event } from './../events/event.entity';
 import * as dotenv from 'dotenv';
+import * as path from 'path';
 
-dotenv.config({ path: `${process.env.NODE_ENV}.env` });
+(async function() {
+  try {
+    const envPath = path.resolve(process.cwd(), `${process.env.NODE_ENV.trim()}.env`).replaceAll('\\', '/');
+
+    dotenv.config({ path: envPath });
+    dotenv.configDotenv({path: envPath})
+  } catch (error) {
+    console.error(error);
+  }
+})();
 
 console.log(process.env.DB_NAME);
 
@@ -20,7 +30,7 @@ console.log(process.env.DB_NAME);
       password: process.env.DB_PASS,
       database: process.env.DB_NAME,
       entities: [Event, Attendee, Profile, User],
-      synchronize: process.env.ENVI === 'development',
+      synchronize: process.env.NODE_ENV == 'dev',
     }),
   ],
 })
