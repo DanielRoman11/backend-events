@@ -29,7 +29,7 @@ import * as path from 'path';
       password: process.env.DB_PASS,
       database: process.env.DB_NAME,
       entities: [Event, Attendee, Profile, User],
-      synchronize: process.env.NODE_ENV == 'dev',
+      synchronize: process.env.NODE_ENV !== 'production',
     }),
   ],
 })
