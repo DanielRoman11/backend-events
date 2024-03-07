@@ -21,12 +21,6 @@ services:
     networks:
       - backend-events_default
 
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
-
   app:
     image: nestjs-docker:local
     container_name: nestjs-docker
