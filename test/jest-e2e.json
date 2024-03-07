@@ -5,8 +5,5 @@
   "testRegex": ".e2e-spec.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
-  },
-  "testEnvironmentVariables": {
-    "NODE_ENV": "e2e"
   }
 }
