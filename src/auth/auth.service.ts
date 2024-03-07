@@ -1,19 +1,16 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { User } from "./user.entity";
-import { JwtService } from "@nestjs/jwt";
-import * as bcrypt from "bcrypt";
+import { Injectable } from '@nestjs/common';
+import { User } from './user.entity';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly jwtService: JwtService,
-  ) { }
+  constructor(private readonly jwtService: JwtService) {}
 
   public getTokenForUser(user: User): string {
     return this.jwtService.sign({
       username: user.username,
-      sub: user.id
+      sub: user.id,
     });
   }
 

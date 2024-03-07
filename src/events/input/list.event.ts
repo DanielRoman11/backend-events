@@ -7,7 +7,7 @@ export enum WhenEventFilter {
   ThisMonth,
   NextMonth,
   ThisYear,
-  NextYear
+  NextYear,
 }
 
 export class ListEvents {

@@ -11,20 +11,8 @@ import { EventsOrganizedByUserController } from './events-by-user.Controller';
 import { CurrentEventAttendaceController } from './currentUserEventAttendance.controller';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Event, Attendee])
-  ],
-  controllers: [
-    EventsController, 
-    EventsOrganizedByUserController, 
-    EventAttendeeController,
-    EventsOrganizedByUserController,
-    ExampleController, 
-    CurrentEventAttendaceController
-  ],
-  providers: [
-    EventsService, 
-    AttendeesService
-  ]
+  imports: [TypeOrmModule.forFeature([Event, Attendee])],
+  controllers: [EventsController, EventsOrganizedByUserController, EventAttendeeController, EventsOrganizedByUserController, ExampleController, CurrentEventAttendaceController],
+  providers: [EventsService, AttendeesService],
 })
 export class EventsModule {}

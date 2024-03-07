@@ -4,9 +4,9 @@ import { Profile } from './../auth/profile.entity';
 import { User } from './../auth/user.entity';
 import { Attendee } from './../events/attendee.entity';
 import { Event } from './../events/event.entity';
-import * as dotenv from "dotenv";
+import * as dotenv from 'dotenv';
 
-dotenv.config()
+dotenv.config({ path: `${process.env.NODE_ENV}.env` });
 
 console.log(process.env.DB_NAME);
 
@@ -20,8 +20,8 @@ console.log(process.env.DB_NAME);
       password: process.env.DB_PASS,
       database: process.env.DB_NAME,
       entities: [Event, Attendee, Profile, User],
-      synchronize: process.env.ENVI === 'development' 
-    })
-  ]
+      synchronize: process.env.ENVI === 'development',
+    }),
+  ],
 })
 export class DatabaseModule {}
