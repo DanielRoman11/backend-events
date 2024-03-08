@@ -1,5 +1,12 @@
 import * as dotenv from 'dotenv';
-dotenv.config();
+import * as path from 'path';
+import { cwd } from 'process';
+
+const pathEnv = path.join(cwd(), `${process.env.NODE_ENV.trim()}.env`).replaceAll('\\','/')
+// console.log(pathEnv);
+dotenv.config({ path: pathEnv });
+dotenv.configDotenv({ path: pathEnv });
+console.log(dotenv.config({path: pathEnv}));
 
 test('test is null', () => {
   const n = null;

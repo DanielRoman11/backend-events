@@ -7,12 +7,12 @@ import { Event } from './../events/event.entity';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 
-(async function() {
+(async function () {
   try {
     const envPath = path.resolve(process.cwd(), `${process.env.NODE_ENV.trim()}.env`).replaceAll('\\', '/');
 
     dotenv.config({ path: envPath });
-    dotenv.configDotenv({path: envPath})
+    dotenv.configDotenv({ path: envPath });
   } catch (error) {
     console.error(error);
   }
@@ -30,7 +30,7 @@ import * as path from 'path';
       database: process.env.DB_NAME,
       entities: [Event, Attendee, Profile, User],
       synchronize: process.env.NODE_ENV !== 'production',
-      dropSchema: Boolean(process.env.NODE_ENV === 'e2e' && false)
+      dropSchema: Boolean(process.env.NODE_ENV === 'e2e' && false),
     }),
   ],
 })
