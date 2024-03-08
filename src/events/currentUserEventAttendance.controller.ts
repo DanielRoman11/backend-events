@@ -4,6 +4,7 @@ import {
   Controller,
   DefaultValuePipe,
   Get,
+  Logger,
   NotFoundException,
   Param,
   ParseIntPipe,
@@ -23,6 +24,7 @@ import { AuthGuardJwt } from './../auth/auth-guard.jwt';
 @Controller('events-attendance')
 @SerializeOptions({ strategy: 'excludeAll' })
 export class CurrentEventAttendaceController {
+  private readonly logger = new Logger(CurrentEventAttendaceController.name)
   constructor(private readonly attendeService: AttendeesService, private readonly eventsService: EventsService) {}
 
   @Get()
@@ -46,10 +48,15 @@ export class CurrentEventAttendaceController {
     return attendee;
   }
 
-  @Put(':eventId')
+  @Put('/:eventId')
   @UseGuards(AuthGuardJwt)
   @UseInterceptors(ClassSerializerInterceptor)
-  async createOrUpdate(@Param('eventId', ParseIntPipe) eventId: number, @Body() input: CreateAttendeeDto, @CurrentUser() user: User) {
-    return this.attendeService.createOrUpdate(input, eventId, user.id);
+  async createOrUpdate(@Param('eventId', new ParseIntPipe()) eventId: number, @Body() input: CreateAttendeeDto, @CurrentUser() user: User) {
+    const eventExists = await this.eventsService.findOne(eventId)
+    this.logger.log({eventExists})
+    if(!eventExists)  
+      throw new NotFoundException(`Event with ID ${eventId} not found`)
+    
+    return this.attendeService.createOrUpdate(input, eventId, user.id)
   }
 }

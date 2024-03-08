@@ -7,8 +7,7 @@ export class CreateUserDto {
 
   @Length(5)
   password: string;
-
-  @Length(5)
+  
   retypePassword: string;
 
   @IsEmail()

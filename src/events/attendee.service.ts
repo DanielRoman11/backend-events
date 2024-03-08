@@ -30,7 +30,7 @@ export class AttendeesService {
   }
 
   public async createOrUpdate(input: CreateAttendeeDto, eventId: number, userId: number): Promise<Attendee> {
-    const attende = (await this.findOneByEventIdAndUserId(userId, eventId)) ?? new Attendee();
+    const attende = await this.findOneByEventIdAndUserId(userId, eventId) ?? new Attendee();
 
     attende.eventId = eventId;
     attende.userId = userId;
