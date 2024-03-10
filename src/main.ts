@@ -10,6 +10,7 @@ async function bootstrap() {
     logger: ['error', 'warn', 'debug', 'fatal', 'log'],
   });
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(3000);
+  const port = process.env.PORT || 3000
+  await app.listen(port);
 }
 bootstrap();
