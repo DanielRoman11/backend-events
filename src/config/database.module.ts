@@ -11,26 +11,26 @@ import * as path from 'path';
   try {
     const envPath = path.resolve(process.cwd(), `${process.env.NODE_ENV.trim()}.env`).replaceAll('\\', '/');
 
+    console.log(dotenv.config({ path: envPath }));
     dotenv.config({ path: envPath });
     dotenv.configDotenv({ path: envPath });
   } catch (error) {
     console.error(error);
   }
 })();
-// console.log(process.env.DB_NAME);
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.DB_HOST,
-      port: Number(process.env.DB_PORT) && 3307,
-      username: process.env.DB_USER,
-      password: process.env.DB_PASS,
-      database: process.env.DB_NAME,
-      entities: [Event, Attendee, Profile, User],
-      synchronize: process.env.NODE_ENV !== 'production',
-      dropSchema: Boolean(process.env.NODE_ENV === 'e2e' && false),
+    type: 'mysql',
+    host: process.env.DB_HOST,
+    port: Number(process.env.DB_PORT) || 3007,
+    username: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME,
+    entities: [Event, Attendee, Profile, User],
+    synchronize: process.env.NODE_ENV !== 'prod',
+    dropSchema: Boolean(process.env.NODE_ENV === 'e2e' && false),
     }),
   ],
 })

@@ -53,10 +53,11 @@ export class CurrentEventAttendaceController {
   @UseInterceptors(ClassSerializerInterceptor)
   async createOrUpdate(@Param('eventId', new ParseIntPipe()) eventId: number, @Body() input: CreateAttendeeDto, @CurrentUser() user: User) {
     const eventExists = await this.eventsService.findOne(eventId)
-    this.logger.log({eventExists})
-    if(!eventExists)  
-      throw new NotFoundException(`Event with ID ${eventId} not found`)
-    
+    if(!eventExists){
+      const errorException = new NotFoundException(`Event with ID ${eventId} not found`)
+      this.logger.warn(errorException)
+      throw errorException
+    }
     return this.attendeService.createOrUpdate(input, eventId, user.id)
   }
 }

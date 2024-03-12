@@ -13,6 +13,6 @@ export class EventAttendeeController {
   @Get()
   @UseInterceptors(ClassSerializerInterceptor)
   public async getAll(@Param('eventId', new DefaultValuePipe(1), new ParseIntPipe()) eventId: number): Promise<Attendee[]> {
-    return await this.attendeesService.findByEventId(eventId);
+    return await this.attendeesService.findByEventId(Number(eventId));
   }
 }
