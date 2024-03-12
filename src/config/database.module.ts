@@ -23,7 +23,7 @@ import * as path from 'path';
   imports: [
     TypeOrmModule.forRoot({
     type: 'mysql',
-    host: process.env.DB_HOST,
+    host: process.env.DB_HOST || 'eventosdb' || '172.17.0.1',
     port: Number(process.env.DB_PORT) || 3007,
     username: process.env.DB_USER,
     password: process.env.DB_PASS,
