@@ -9,13 +9,5 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3001:3001"
-    environment:
-      - PORT=3001
-      - DB_HOST=eventos
-      - DB_PORT=3307
-      - DB_USER=daker
-      - DB_PASS=secret
-      - DB_NAME=eventos
-      - JWT_SECRET= ThisIsMySecret
     volumes:
       - ./src:/usr/src/app/src

@@ -35,4 +35,3 @@ services:
       - ./src:/usr/src/app/src
     depends_on:
       - mysql_db
-
