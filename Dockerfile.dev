@@ -8,6 +8,6 @@ COPY . .
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
-EXPOSE 3001
+EXPOSE 3000
 
 CMD ["pnpm", "start:dev"]

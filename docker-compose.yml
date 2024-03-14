@@ -3,7 +3,6 @@ version: "3.8"
 networks:
   network-eventos:
     driver: bridge
-    attachable: true
 
 services:
   eventos:
@@ -21,14 +20,20 @@ services:
     networks:
       - network-eventos
 
-  app:
+  nestjs_api:
     image: nestjs-docker:latest
-    container_name: nestjs-docker
+    container_name: nestjs-api
     build: 
       context: .
       dockerfile: Dockerfile.dev
     ports:
-      - 3000:3000
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - DB_HOST=eventos
+      - NODE_ENV=dev
+    volumes:
+      - ./src:/usr/src/app/src
     depends_on:
       - eventos
     networks:

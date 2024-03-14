@@ -7,5 +7,10 @@ WORKDIR /usr/src/app
 COPY . .
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN pnpm build
 
-CMD ["pnpm", "start"]
+RUN rm -rf ./src
+
+EXPOSE 3000
+
+CMD ["pnpm", "start:prod"]
