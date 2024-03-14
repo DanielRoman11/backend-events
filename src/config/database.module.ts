@@ -15,7 +15,7 @@ import { Event } from './../events/event.entity';
     password: process.env.DB_PASS,
     database: process.env.DB_NAME,
     entities: [Event, Attendee, Profile, User],
-    synchronize: process.env.NODE_ENV !== undefined,
+    synchronize: true,
     dropSchema: Boolean(process.env.NODE_ENV === 'e2e' && false),
     }),
   ],
