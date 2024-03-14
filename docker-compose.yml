@@ -2,12 +2,12 @@ version: "3.8"
 
 services:
   nestjs_api:
-    image: nestjs-docker:latest
+    image: nestjs-docker
     container_name: nestjs-api
     build: 
       context: .
       dockerfile: Dockerfile
     ports:
-      - "3001:3001"
+      - "8080:8080"
     volumes:
       - ./src:/usr/src/app/src

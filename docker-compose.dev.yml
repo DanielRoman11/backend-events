@@ -16,7 +16,7 @@ services:
       MYSQL_TCP_PORT: 3307
 
   nestjs_api:
-    image: nestjs-docker:latest
+    image: nestjs-docker
     container_name: nestjs-api
     build: 
       context: .
@@ -25,12 +25,13 @@ services:
       - "3000:3000"
     environment:
       - PORT=3000
+      - JWT_SECRET=ThisIsMySecret
+      - NODE_ENV=dev
       - DB_HOST=mysql_db
       - DB_PORT=3307
       - DB_USER=daker
       - DB_PASS=secret
       - DB_NAME=eventos
-      - JWT_SECRET= ThisIsMySecret
     volumes:
       - ./src:/usr/src/app/src
     depends_on:
