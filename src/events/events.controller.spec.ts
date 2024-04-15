@@ -25,9 +25,9 @@ describe('EventsController', () => {
       data: [],
     };
 
-    eventsService.getEventWithAttendeeCountPaginated = jest.fn().mockImplementation((): any => result);
+    eventsService.getEventsWithAttendeeCountFilteredPaginated = jest.fn().mockImplementation((): any => result);
 
-    const spy = jest.spyOn(eventsService, 'getEventWithAttendeeCountPaginated').mockImplementation((): any => result);
+    const spy = jest.spyOn(eventsService, 'getEventsWithAttendeeCountFilteredPaginated').mockImplementation((): any => result);
 
     expect(await eventsController.findAll(new ListEvents())).toEqual(result);
     expect(spy).toHaveBeenCalledTimes(1);
