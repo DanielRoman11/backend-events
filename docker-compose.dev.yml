@@ -9,10 +9,10 @@ services:
     ports:
       - '3307:3307'
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: eventos
-      MYSQL_USER: daker
-      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_TCP_PORT: 3307
 
   nestjs_api:
@@ -29,9 +29,9 @@ services:
       - NODE_ENV=dev
       - DB_HOST=mysql_db
       - DB_PORT=3307
-      - DB_USER=daker
-      - DB_PASS=secret
-      - DB_NAME=eventos
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_NAME=${DB_NAME}
     volumes:
       - ./src:/usr/src/app/src
     depends_on:
