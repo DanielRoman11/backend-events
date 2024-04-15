@@ -75,7 +75,9 @@ export class EventsService {
     });
   }
 
-  private getEventsAttendeeCountFilteredQuery(filter?: ListEvents): SelectQueryBuilder<Event> {
+  private getEventsAttendeeCountFilteredQuery(
+    filter?: ListEvents
+  ): SelectQueryBuilder<Event> {
     let query = this.getEventWithAttendeeCountQuery();
 
     if (!filter) return query;
@@ -87,11 +89,7 @@ export class EventsService {
 
       if (filter.when == WhenEventFilter.ThisWeek) query = query.andWhere(`YEARWEEK(e.when, 1) = YEARWEEK(CURDATE(), 1)`);
 
-      if (filter.when == WhenEventFilter.NextWeek) {
-        query = query.andWhere(`YEARWEEK(e.when, 1) = YEARWEEK(DATE_ADD(CURDATE(), INTERVAL 1 WEEK), 1)`);
-
-        console.log(query.getSql());
-      }
+      if (filter.when == WhenEventFilter.NextWeek) query = query.andWhere(`YEARWEEK(e.when, 1) = YEARWEEK(DATE_ADD(CURDATE(), INTERVAL 1 WEEK), 1)`)
 
       if (filter.when == WhenEventFilter.ThisMonth) query = query.andWhere(`MONTH(e.when) = MONTH(CURDATE()) AND YEAR(e.when) = YEAR(CURDATE())`);
 
@@ -105,10 +103,14 @@ export class EventsService {
     }
   }
 
-  public async getEventWithAttendeeCountPaginated(filter: ListEvents, paginationsOptions: PaginationsOptions): Promise<PaginationResults<Event | undefined>> {
-    const query = this.getEventsAttendeeCountFilteredQuery(filter);
-
-    return await Paginate(query.select(), paginationsOptions);
+  public async getEventsWithAttendeeCountFilteredPaginated(
+    filter: ListEvents,
+    paginateOptions: PaginationsOptions
+  ): Promise<PaginatedEvents> {
+    return await Paginate(
+      this.getEventsAttendeeCountFilteredQuery(filter),
+      paginateOptions
+    );
   }
 
   public async getEventsOrganizedByUserIdPaginated(userId: number, paginateOptions: PaginationsOptions): Promise<PaginatedEvents> {

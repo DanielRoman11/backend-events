@@ -83,7 +83,7 @@ describe('Events (e2e)', () => {
         expect(response.body.first).toBe(1);
         expect(response.body.last).toBe(2);
         expect(response.body.limit).toBe(2);
-        expect(response.body.total).toBe(2);
+        expect(response.body.totalPages).toBe(2);
       })
   });
 
