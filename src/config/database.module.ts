@@ -8,16 +8,16 @@ import { Event } from './../events/event.entity';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-    type: 'mysql',
-    host: process.env.DB_HOST,
-    port: Number(process.env.DB_PORT) || 3007,
-    username: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME,
-    entities: [Event, Attendee, Profile, User],
-    synchronize: true,
-    dropSchema: Boolean(process.env.NODE_ENV === 'e2e' && false),
+      type: 'mysql',
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT) || 3007,
+      username: process.env.DB_USER,
+      password: process.env.DB_PASS,
+      database: process.env.DB_NAME,
+      entities: [Event, Attendee, Profile, User],
+      synchronize: true,
+      dropSchema: Boolean(process.env.NODE_ENV === 'e2e'),
     }),
   ],
 })
-export class DatabaseModule {}
+export class DatabaseModule { }
