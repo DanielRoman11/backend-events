@@ -8,6 +8,8 @@ COPY . .
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
+RUN apk add git
+
 EXPOSE 3000
 
 CMD ["pnpm", "start:dev"]
