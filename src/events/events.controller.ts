@@ -26,7 +26,7 @@ import { ListEvents } from './input/list.event';
 import { CurrentUser } from './../auth/current-user.decorator';
 import { User } from './../auth/user.entity';
 import { AuthGuardJwt } from './../auth/auth-guard.jwt';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Events')
 @Controller({ path: '/events' })
@@ -60,6 +60,7 @@ export class EventsController {
   @Post()
   @UseGuards(AuthGuardJwt)
   @UseInterceptors(ClassSerializerInterceptor)
+  @ApiBearerAuth()
   async create(@Body() input: CreateEventDto, @CurrentUser() user: User) {
     return await this.eventService.createEvent(input, user);
   }
