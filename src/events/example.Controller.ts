@@ -3,7 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Like, MoreThan, Repository } from 'typeorm';
 import { Event } from './event.entity';
 import { Attendee } from './attendee.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('practice')
 @Controller('/practice')
 export class ExampleController {
   constructor(

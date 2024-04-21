@@ -20,7 +20,9 @@ import { CurrentUser } from './../auth/current-user.decorator';
 import { User } from './../auth/user.entity';
 import { EventsService } from './event.service';
 import { AuthGuardJwt } from './../auth/auth-guard.jwt';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Events attended by User')
 @Controller('events-attendance')
 @SerializeOptions({ strategy: 'excludeAll' })
 export class CurrentEventAttendaceController {

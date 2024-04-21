@@ -1,7 +1,9 @@
 import { ClassSerializerInterceptor, Controller, DefaultValuePipe, Get, Param, ParseIntPipe, SerializeOptions, UseInterceptors } from '@nestjs/common';
 import { AttendeesService } from './attendee.service';
 import { Attendee } from './attendee.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Events attendes')
 @Controller('events/:eventid/attendees')
 @SerializeOptions({ strategy: 'excludeAll' })
 export class EventAttendeeController {

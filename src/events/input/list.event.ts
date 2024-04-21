@@ -1,3 +1,5 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 export enum WhenEventFilter {
   All = 1,
   Today,
@@ -11,6 +13,11 @@ export enum WhenEventFilter {
 }
 
 export class ListEvents {
+  @ApiProperty({ required: false })
   when?: WhenEventFilter = WhenEventFilter.All;
+  
+  @ApiProperty({
+    default: 1,
+  })
   page: number = 1;
 }

@@ -21,7 +21,8 @@
 		"vscode": {
 			"extensions": [
 				"tal7aouy.icons",
-				"cweijan.vscode-database-client2"
+				"cweijan.vscode-database-client2",
+				"esbenp.prettier-vscode"
 			]
 		}
 	}

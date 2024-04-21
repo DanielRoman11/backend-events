@@ -26,26 +26,24 @@ import { ListEvents } from './input/list.event';
 import { CurrentUser } from './../auth/current-user.decorator';
 import { User } from './../auth/user.entity';
 import { AuthGuardJwt } from './../auth/auth-guard.jwt';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Events')
 @Controller({ path: '/events' })
 @SerializeOptions({ strategy: 'excludeAll' })
 export class EventsController {
   private readonly logger = new Logger(EventsController.name);
-  constructor(private readonly eventService: EventsService) { }
+  constructor(private readonly eventService: EventsService) {}
 
   @Get()
   @UsePipes(new ValidationPipe({ transform: true }))
   @UseInterceptors(ClassSerializerInterceptor)
   async findAll(@Query() filter: ListEvents) {
-    const events = await this.eventService
-      .getEventsWithAttendeeCountFilteredPaginated(
-        filter,
-        {
-          totalPages: true,
-          currentPage: filter.page,
-          limit: 2
-        }
-      );
+    const events = await this.eventService.getEventsWithAttendeeCountFilteredPaginated(filter, {
+      totalPages: true,
+      currentPage: filter.page,
+      limit: 2,
+    });
 
     return events;
   }

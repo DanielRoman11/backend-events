@@ -4,7 +4,9 @@ import { CreateUserDto } from './input/create.user.dto';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Authentication')
 @Controller('users')
 export class UserController {
   constructor(
