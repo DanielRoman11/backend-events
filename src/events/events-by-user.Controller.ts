@@ -2,7 +2,7 @@ import { ClassSerializerInterceptor, Controller, DefaultValuePipe, Get, Param, P
 import { EventsService } from './event.service';
 import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('Events by User')
+@ApiTags('Attendees')
 @Controller('events-by-user/:userId')
 @SerializeOptions({ strategy: 'excludeAll' })
 export class EventsOrganizedByUserController {

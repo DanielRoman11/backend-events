@@ -3,7 +3,7 @@ import { AttendeesService } from './attendee.service';
 import { Attendee } from './attendee.entity';
 import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('Events attendes')
+@ApiTags('Attendees')
 @Controller('events/:eventid/attendees')
 @SerializeOptions({ strategy: 'excludeAll' })
 export class EventAttendeeController {

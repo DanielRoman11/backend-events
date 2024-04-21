@@ -20,9 +20,9 @@ import { CurrentUser } from './../auth/current-user.decorator';
 import { User } from './../auth/user.entity';
 import { EventsService } from './event.service';
 import { AuthGuardJwt } from './../auth/auth-guard.jwt';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('Events attended by User')
+@ApiTags('Attendees')
 @Controller('events-attendance')
 @SerializeOptions({ strategy: 'excludeAll' })
 export class CurrentEventAttendaceController {
@@ -32,6 +32,7 @@ export class CurrentEventAttendaceController {
   @Get()
   @UseGuards(AuthGuardJwt)
   @UseInterceptors(ClassSerializerInterceptor)
+  @ApiBearerAuth()
   async findAll(@CurrentUser() user: User, @Query('page', new DefaultValuePipe(1), new ParseIntPipe()) page = 1) {
     return await this.eventsService.getEventsAttendedByUserIdPaginated(user.id, {
       currentPage: page,
@@ -42,6 +43,7 @@ export class CurrentEventAttendaceController {
   @Get('/:eventId')
   @UseGuards(AuthGuardJwt)
   @UseInterceptors(ClassSerializerInterceptor)
+  @ApiBearerAuth()
   async findOne(@Param('eventId', new ParseIntPipe()) eventId, @CurrentUser() user: User) {
     const attendee = await this.attendeService.findOneByEventIdAndUserId(user.id, eventId);
 
@@ -53,6 +55,7 @@ export class CurrentEventAttendaceController {
   @Put('/:eventId')
   @UseGuards(AuthGuardJwt)
   @UseInterceptors(ClassSerializerInterceptor)
+  @ApiBearerAuth()
   async createOrUpdate(@Param('eventId', new ParseIntPipe()) eventId: number, @Body() input: CreateAttendeeDto, @CurrentUser() user: User) {
     const eventExists = await this.eventsService.findOne(eventId)
     if(!eventExists){

@@ -4,7 +4,7 @@ import { CurrentUser } from './current-user.decorator';
 import { User } from './user.entity';
 import { AuthGuardLocal } from './auth-guard.local';
 import { AuthGuardJwt } from './auth-guard.jwt';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -13,7 +13,6 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
-  @UseGuards(AuthGuardLocal)
   async login(@CurrentUser() user: User) {
     return {
       userId: user.id,
@@ -24,6 +23,7 @@ export class AuthController {
   @Get('profile')
   @UseGuards(AuthGuardJwt)
   @UseInterceptors(ClassSerializerInterceptor)
+  @ApiBearerAuth()
   async getProfile(@CurrentUser() user: User) {
     return user;
   }

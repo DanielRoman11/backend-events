@@ -69,6 +69,7 @@ export class EventsController {
   @UseGuards(AuthGuardJwt)
   @UseInterceptors(ClassSerializerInterceptor)
   @HttpCode(202)
+  @ApiBearerAuth()
   async update(@Param('id', ParseIntPipe) id, @Body() input: UpdateEventDto, @CurrentUser() user: User) {
     const event = await this.eventService.findOne(id);
 
@@ -82,6 +83,7 @@ export class EventsController {
   @Delete(':id')
   @UseGuards(AuthGuardJwt)
   @HttpCode(204)
+  @ApiBearerAuth()
   async remove(@Param('id', ParseIntPipe) id, @CurrentUser() user: User) {
     const event = await this.eventService.findOne(id);
     if (!event) throw new NotFoundException();
