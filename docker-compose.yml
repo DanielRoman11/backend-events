@@ -3,6 +3,7 @@ version: "3.8"
 services:
   nestjs_api:
     image: nestjs-docker
+    container_name: nestjs-api
     build: 
       context: .
       dockerfile: Dockerfile
