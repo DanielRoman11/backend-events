@@ -6,14 +6,14 @@ WORKDIR /app
 RUN if ! command -v pnpm &> /dev/null; then npm i -g pnpm; fi
 
 # Configurar el directorio de almacenamiento de PNPM
-RUN pnpm config set store-dir ~/.pnpm-store
+RUN pnpm config set store-dir /root/.local/share/pnpm/store/v3
 
 
 FROM base AS prod-deps
-RUN --mount=type=cache,id=s/c3c868f7-49e7-49da-9efb-f2c04a4a58d5-/.pnpm-store,target=/.pnpm-store pnpm install --prod --frozen-lockfile
+RUN --mount=type=cache,id=s/c3c868f7-49e7-49da-9efb-f2c04a4a58d5-/root/.local/share/pnpm/store/v3,target=/root/.local/share/pnpm/store/v3 pnpm install --prod --frozen-lockfile
 
 FROM base AS build
-RUN --mount=type=cache,id=s/c3c868f7-49e7-49da-9efb-f2c04a4a58d5-/.pnpm-store,target=/.pnpm-store pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=s/c3c868f7-49e7-49da-9efb-f2c04a4a58d5-/root/.local/share/pnpm/store/v3,target=/root/.local/share/pnpm/store/v3 pnpm install --frozen-lockfile
 RUN pnpm run build
 
 FROM base
