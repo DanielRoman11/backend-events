@@ -1,39 +1,31 @@
-# Define el stage base
 FROM node:20-alpine AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-
-# Habilita Corepack
 RUN corepack enable
-
-# Copia el código fuente de la aplicación
-COPY . /app
 WORKDIR /app
 
-# Define el stage para las dependencias de producción
-FROM base AS prod-deps
-# Usa la caché de pnpm
-RUN --mount=type=cache,id=s/pnpm-cache,target=/pnpm/store pnpm install --prod --frozen-lockfile
+# Copia solo el archivo de bloqueo de dependencias
+COPY package.json pnpm-lock.yaml ./
 
-# Define el stage para la construcción
+# Instala dependencias de producción
+RUN --mount=type=cache,id=b1ff8c12-724c-4aee-84f8-9f9dc8662531-/pnpm/store pnpm install --prod --frozen-lockfile
+
+# Copia el resto de los archivos
+COPY . .
+
 FROM base AS build
-# Usa la caché de pnpm
-RUN --mount=type=cache,id=s/pnpm-cache,target=/pnpm/store pnpm install --frozen-lockfile
-# Ejecuta el comando de construcción
+
+# Instala dependencias de desarrollo y construye la aplicación
+RUN --mount=type=cache,id=b1ff8c12-724c-4aee-84f8-9f9dc8662531-/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm run build
 
-# Define el stage final
 FROM base AS final
-# Copia las dependencias de producción
-COPY --from=prod-deps /app/node_modules /app/node_modules
-# Copia el código construido
-COPY --from=build /app/dist /app/dist
+COPY --from=build /app/dist ./dist
 
-# Configura el puerto
 ARG PORT=3000
 ENV PORT=${PORT}
 ENV NODE_ENV=production
+
 EXPOSE ${PORT}
 
-# Define el comando de inicio
 CMD ["pnpm", "start:prod"]
