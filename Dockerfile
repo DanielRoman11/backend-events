@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
 
 # Instala dependencias de producción
-RUN --mount=type=cache,id=b1ff8c12-724c-4aee-84f8-9f9dc8662531-/pnpm/store pnpm install --prod --frozen-lockfile
+RUN --mount=type=cache,id=s/b1ff8c12-724c-4aee-84f8-9f9dc8662531-/pnpm/store,target=/pnpm/store pnpm install --prod --frozen-lockfile
 
 # Copia el resto de los archivos
 COPY . .
@@ -16,7 +16,7 @@ COPY . .
 FROM base AS build
 
 # Instala dependencias de desarrollo y construye la aplicación
-RUN --mount=type=cache,id=b1ff8c12-724c-4aee-84f8-9f9dc8662531-/pnpm/store pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=s/b1ff8c12-724c-4aee-84f8-9f9dc8662531-/pnpm/store,target=/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm run build
 
 FROM base AS final
