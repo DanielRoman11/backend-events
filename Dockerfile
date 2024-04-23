@@ -16,6 +16,11 @@ RUN pnpm run build
 FROM base
 COPY --from=prod-deps /app/node_modules /app/node_modules
 COPY --from=build /app/dist /app/dist
-EXPOSE 8000
+
+ARG PORT=3000
+ENV PORT=${PORT}
+ENV NODE_ENV=production
+
+EXPOSE ${PORT}
 
 CMD ["pnpm", "start:prod"]
