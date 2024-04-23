@@ -1,15 +1,19 @@
 FROM node:20-slim AS base
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
 COPY . /app
 WORKDIR /app
 
+# Instalar PNPM solo si no está instalado previamente
+RUN if ! command -v pnpm &> /dev/null; then npm i -g pnpm; fi
+
+# Configurar el directorio de almacenamiento de PNPM
+RUN pnpm config set store-dir ~/.pnpm-store
+
+
 FROM base AS prod-deps
-RUN --mount=type=cache,id=s/b1ff8c12-724c-4aee-84f8-9f9dc8662531-/pnpm/store,target=/pnpm/store
+RUN --mount=type=cache,id=s/c3c868f7-49e7-49da-9efb-f2c04a4a58d5-/.pnpm-store,target=/.pnpm-store pnpm install --prod --frozen-lockfile
 
 FROM base AS build
-RUN --mount=type=cache,id=s/b1ff8c12-724c-4aee-84f8-9f9dc8662531-/pnpm/store,target=/pnpm/store
+RUN --mount=type=cache,id=s/c3c868f7-49e7-49da-9efb-f2c04a4a58d5-/.pnpm-store,target=/.pnpm-store pnpm install --frozen-lockfile
 RUN pnpm run build
 
 FROM base
